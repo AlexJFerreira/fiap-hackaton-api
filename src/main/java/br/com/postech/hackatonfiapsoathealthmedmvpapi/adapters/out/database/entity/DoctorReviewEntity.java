@@ -1,6 +1,5 @@
 package br.com.postech.hackatonfiapsoathealthmedmvpapi.adapters.out.database.entity;
 
-import br.com.postech.hackatonfiapsoathealthmedmvpapi.application.core.domain.Doctor;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,19 +11,18 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import lombok.Data;
 
-@Data
 @Entity
 @Table(name = "doctor_review")
 public class DoctorReviewEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @Column(name = "id")
+  private Long reviewId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "doctor_id", nullable = false)
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "review_id", nullable = false)
   private DoctorEntity doctor;
 
   @Column(nullable = false)
@@ -35,6 +33,7 @@ public class DoctorReviewEntity {
 
   @Column(name = "review_date", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private LocalDateTime reviewDate;
+
 
 
 }

@@ -3,11 +3,14 @@ package br.com.postech.hackatonfiapsoathealthmedmvpapi.adapters.in.controller;
 import br.com.postech.hackatonfiapsoathealthmedmvpapi.adapters.in.controller.request.DoctorLoginRequest;
 import br.com.postech.hackatonfiapsoathealthmedmvpapi.adapters.in.controller.request.DoctorRegistrationRequest;
 import br.com.postech.hackatonfiapsoathealthmedmvpapi.adapters.in.controller.response.DoctorRegistrationResponse;
+import br.com.postech.hackatonfiapsoathealthmedmvpapi.adapters.in.controller.response.DoctorsSearchResponse;
 import br.com.postech.hackatonfiapsoathealthmedmvpapi.adapters.in.controller.response.LoginResponse;
 import br.com.postech.hackatonfiapsoathealthmedmvpapi.application.core.domain.Doctor;
+import br.com.postech.hackatonfiapsoathealthmedmvpapi.application.ports.in.DoctorsSearchInputPort;
 import br.com.postech.hackatonfiapsoathealthmedmvpapi.application.ports.in.RegisterDoctorInputPort;
 import br.com.postech.hackatonfiapsoathealthmedmvpapi.config.security.JwtHelper;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -15,9 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +34,7 @@ public class DoctorController {
 
   private final ModelMapper modelMapper;
   private final RegisterDoctorInputPort registerDoctorInputPort;
+  private final DoctorsSearchInputPort doctorsSearchInputPort;
   private final AuthenticationManager manager;
 
   @PostMapping
@@ -44,6 +50,16 @@ public class DoctorController {
     manager.authenticate(new UsernamePasswordAuthenticationToken(doctorLoginRequest.crm(), doctorLoginRequest.password()));
     String token = JwtHelper.generateToken(doctorLoginRequest.crm());
     return ResponseEntity.ok(new LoginResponse(token));
+  }
+
+  @GetMapping
+  @ResponseStatus(HttpStatus.OK)
+  public List<DoctorsSearchResponse> doctorSearchByType(@RequestParam(required = false) final String speciality) {
+    log.info("Doctor search received");
+    var doctors = doctorsSearchInputPort.execute(speciality);
+    return doctors.stream()
+        .map(doctor -> modelMapper.map(doctor, DoctorsSearchResponse.class))
+        .toList();
   }
 
 }

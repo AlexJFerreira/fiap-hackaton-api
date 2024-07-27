@@ -11,10 +11,11 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "doctor")
-@Data
 public class DoctorEntity {
 
   @Id
@@ -45,4 +46,77 @@ public class DoctorEntity {
 
   @Column(name = "registration_date", insertable = false, updatable = false)
   private LocalDateTime registrationDate;
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public Set<DoctorReviewEntity> getDoctorReviews() {
+    return doctorReviews;
+  }
+
+  public void setDoctorReviews(
+      Set<DoctorReviewEntity> doctorReviews) {
+    this.doctorReviews = doctorReviews;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getSpeciality() {
+    return speciality;
+  }
+
+  public void setSpeciality(String speciality) {
+    this.speciality = speciality;
+  }
+
+  public String getCrm() {
+    return crm;
+  }
+
+  public void setCrm(String crm) {
+    this.crm = crm;
+  }
+
+  public String getCrmState() {
+    return crmState;
+  }
+
+  public void setCrmState(String crmState) {
+    this.crmState = crmState;
+  }
+
+  public LocalDateTime getRegistrationDate() {
+    return registrationDate;
+  }
+
+  public void setRegistrationDate(LocalDateTime registrationDate) {
+    this.registrationDate = registrationDate;
+  }
 }
